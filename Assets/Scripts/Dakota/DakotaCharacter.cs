@@ -7,8 +7,10 @@ namespace Dakota
     {
         [SerializeField] private float m_MaxSpeed = 10f;                    // The fastest the player can travel in the x axis.
         [SerializeField] private float m_JumpForce = 300f;                  // Amount of force added when the player jumps.
-        [SerializeField] private bool m_AirControl = false;                 // Whether or not a player can steer while jumping;
+        [SerializeField] private bool m_AirControl = true;                 // Whether or not a player can steer while jumping;
         [SerializeField] private LayerMask m_WhatIsGround;                  // A mask determining what is ground to the character
+        [SerializeField] private float m_Reach = 2.0f;                  // A mask determining what is ground to the character
+        [SerializeField] private Transform m_HoldPoint;                  // Where Dakota's mouth is
 
         private Transform m_GroundCheck;    // A position marking where to check if the player is grounded.
         const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
@@ -17,6 +19,8 @@ namespace Dakota
         private Rigidbody2D m_Rigidbody2D;
         private bool m_FacingRight = true;  // For determining which way the player is currently facing.
         private int m_IdleTime = 0;
+        private bool m_Grabbing = false;
+        private RelativeJoint2D m_BiteJoint;
 
         private void Awake()
         {
@@ -24,6 +28,7 @@ namespace Dakota
             m_GroundCheck = transform.Find("GroundCheck");
             m_Anim = GetComponent<Animator>();
             m_Rigidbody2D = GetComponent<Rigidbody2D>();
+            m_BiteJoint = GetComponent<RelativeJoint2D>();
         }
 
 
@@ -53,6 +58,11 @@ namespace Dakota
 
         public void Move(float move, bool jump, bool bark)
         {
+            // If grabbing then all other movement is disabled
+            // if(m_Grabbing) {
+            //     return;
+            // }
+
             m_Anim.SetBool("Bark", bark);
             if (bark)
                 return;
@@ -94,6 +104,27 @@ namespace Dakota
             }
         }
 
+        public void Grab() {
+            Debug.Log("Grabbing...");
+            if (m_Grabbing) {
+                m_Grabbing = false;
+                // Disable joint
+                m_BiteJoint.enabled = false;
+                return;
+            }
+
+            // Check if we are close to a grabable object
+            Physics2D.queriesStartInColliders = false; // ignore yourself
+            RaycastHit2D hit = Physics2D.Raycast(m_HoldPoint.position, Vector2.right * transform.localScale.x, m_Reach); // is there an object within reach
+            if(hit.collider != null && hit.collider.tag == "Grabbable") {
+                m_Grabbing = true;
+                Debug.Log("Grabbed!");
+                // Enable joint
+                // Set connected rigidbody to hit.rigidbody
+                m_BiteJoint.enabled = true;
+                m_BiteJoint.connectedBody = hit.rigidbody;
+            }
+        } 
 
         private void Flip()
         {
@@ -104,6 +135,12 @@ namespace Dakota
             Vector3 theScale = transform.localScale;
             theScale.x *= -1;
             transform.localScale = theScale;
+        }
+
+        void OnDrawGizmos()
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(m_HoldPoint.position, m_HoldPoint.position + Vector3.right * transform.localScale.x * m_Reach);
         }
     }
 }

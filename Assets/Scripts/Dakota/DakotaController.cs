@@ -20,15 +20,14 @@ namespace Dakota
         private void Update()
         {
             if (!m_Jump)
-            {
-                // Read the jump input in Update so button presses aren't missed.
                 m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
-            }
 
             if (!m_Bark)
-            {
-                // Read the bark input in Update so button presses aren't missed.
                 m_Bark = CrossPlatformInputManager.GetButtonDown("Fire1");
+
+            if (CrossPlatformInputManager.GetButtonDown("Fire2"))
+            {
+                m_Character.Grab();
             }
         }
 
