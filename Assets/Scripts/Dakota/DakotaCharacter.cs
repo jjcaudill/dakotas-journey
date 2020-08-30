@@ -11,6 +11,8 @@ namespace Dakota
         [SerializeField] private LayerMask m_WhatIsGround;                  // A mask determining what is ground to the character
         [SerializeField] private float m_Reach = 2.0f;                  // A mask determining what is ground to the character
         [SerializeField] private Transform m_HoldPoint;                  // Where Dakota's mouth is
+        [SerializeField] private int m_TimeUntilSitting = 10;                  // Idle time until Dakota will sit
+        [SerializeField] private float m_DefaultRotation = 0.0f;                  // Dakota's default Z rotation
 
         private Transform m_GroundCheck;    // A position marking where to check if the player is grounded.
         const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
@@ -20,7 +22,7 @@ namespace Dakota
         private bool m_FacingRight = true;  // For determining which way the player is currently facing.
         private int m_IdleTime = 0;
         private bool m_Grabbing = false;
-        private RelativeJoint2D m_BiteJoint;
+        private HingeJoint2D m_BiteJoint;
 
         private void Awake()
         {
@@ -28,7 +30,7 @@ namespace Dakota
             m_GroundCheck = transform.Find("GroundCheck");
             m_Anim = GetComponent<Animator>();
             m_Rigidbody2D = GetComponent<Rigidbody2D>();
-            m_BiteJoint = GetComponent<RelativeJoint2D>();
+            m_BiteJoint = GetComponent<HingeJoint2D>();
         }
 
 
@@ -49,7 +51,7 @@ namespace Dakota
             // Set the vertical animation
             m_Anim.SetFloat("vSpeed", m_Rigidbody2D.velocity.y);
             m_IdleTime++;
-            if (m_IdleTime > 10)
+            if (m_IdleTime > m_TimeUntilSitting)
                 m_Anim.SetBool("Idle", true);
             else
                 m_Anim.SetBool("Idle", false);
@@ -58,14 +60,14 @@ namespace Dakota
 
         public void Move(float move, bool jump, bool bark)
         {
-            // If grabbing then all other movement is disabled
-            // if(m_Grabbing) {
-            //     return;
-            // }
-
             m_Anim.SetBool("Bark", bark);
             if (bark)
                 return;
+
+            // We will be able to rotate, so get right side up when jumping
+            if (!m_Grounded && !m_Grabbing) {
+                transform.rotation = Quaternion.identity;
+            }
 
             //only control the player if grounded or airControl is turned on
             if (m_Grounded || m_AirControl)
@@ -81,13 +83,13 @@ namespace Dakota
                 m_Rigidbody2D.velocity = new Vector2(move*m_MaxSpeed, m_Rigidbody2D.velocity.y);
 
                 // If the input is moving the player right and the player is facing left...
-                if (move > 0 && !m_FacingRight)
+                if (!m_Grabbing && move > 0 && !m_FacingRight)
                 {
                     // ... flip the player.
                     Flip();
                 }
                     // Otherwise if the input is moving the player left and the player is facing right...
-                else if (move < 0 && m_FacingRight)
+                else if (!m_Grabbing && move < 0 && m_FacingRight)
                 {
                     // ... flip the player.
                     Flip();
@@ -107,6 +109,7 @@ namespace Dakota
         public void Grab() {
             Debug.Log("Grabbing...");
             if (m_Grabbing) {
+                m_Anim.SetBool("Grab", false);
                 m_Grabbing = false;
                 // Disable joint
                 m_BiteJoint.enabled = false;
@@ -117,6 +120,7 @@ namespace Dakota
             Physics2D.queriesStartInColliders = false; // ignore yourself
             RaycastHit2D hit = Physics2D.Raycast(m_HoldPoint.position, Vector2.right * transform.localScale.x, m_Reach); // is there an object within reach
             if(hit.collider != null && hit.collider.tag == "Grabbable") {
+                m_Anim.SetBool("Grab", true);
                 m_Grabbing = true;
                 Debug.Log("Grabbed!");
                 // Enable joint
