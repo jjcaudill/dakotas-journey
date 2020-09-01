@@ -9,7 +9,8 @@ namespace Dakota
     {
         private DakotaCharacter m_Character;
         private bool m_Jump;
-        private bool m_Bark;
+        private bool m_Attack;
+        private bool m_Shoot;
 
         private void Awake()
         {
@@ -22,10 +23,13 @@ namespace Dakota
             if (!m_Jump)
                 m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
 
-            if (!m_Bark)
-                m_Bark = CrossPlatformInputManager.GetButtonDown("Fire1");
+            if (!m_Attack)
+                m_Attack = CrossPlatformInputManager.GetButtonDown("Fire1");
 
-            if (CrossPlatformInputManager.GetButtonDown("Fire2"))
+            if (!m_Shoot)
+                m_Shoot = CrossPlatformInputManager.GetButtonDown("Fire2");
+
+            if (CrossPlatformInputManager.GetButtonDown("Fire3"))
             {
                 m_Character.Grab();
             }
@@ -37,9 +41,16 @@ namespace Dakota
             // Read the inputs.
             float h = CrossPlatformInputManager.GetAxis("Horizontal");
             // Pass all parameters to the character control script.
-            m_Character.Move(h, m_Jump, m_Bark);
+            if (m_Attack)
+                m_Character.Attack();
+            else if (m_Shoot)
+                m_Character.Shoot();
+            else 
+                m_Character.Move(h, m_Jump);
+                
             m_Jump = false;
-            m_Bark = false;
+            m_Attack = false;
+            m_Shoot = false;
         }
     }
 }

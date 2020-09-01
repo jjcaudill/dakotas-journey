@@ -137,6 +137,7 @@ GameObject:
   - component: {fileID: 19862563}
   - component: {fileID: 19862562}
   - component: {fileID: 19862561}
+  - component: {fileID: 19862567}
   - component: {fileID: 19862560}
   - component: {fileID: 19862566}
   m_Layer: 0
@@ -160,6 +161,7 @@ Transform:
   - {fileID: 1443460739}
   - {fileID: 1280219064}
   - {fileID: 1568652739}
+  - {fileID: 1055169041}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -204,15 +206,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_MaxSpeed: 10
-  m_JumpForce: 1000
-  m_AirControl: 1
   m_WhatIsGround:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_Reach: 0.2
+  m_AirControl: 1
+  m_JumpForce: 1000
+  m_CanDoubleJump: 1
+  m_DoubleJumpForce: 700
+  m_Reach: 2
   m_HoldPoint: {fileID: 1568652739}
-  m_TimeUntilSitting: 50
+  m_IdleThreshold: 10
   m_DefaultRotation: 0
+  m_CanAttack: 1
+  m_CanShoot: 1
+  m_AttackDmg: 10
+  m_ProjectileDmg: 2
+  m_ProjectileObject: {fileID: 6051655406882807567, guid: e08f51bcdef7af746b892a56ddf1fa33, type: 3}
+  m_ShootingPoint: {fileID: 1055169041}
 --- !u!50 &19862563
 Rigidbody2D:
   serializedVersion: 4
@@ -227,7 +237,7 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 100
   m_GravityScale: 5
   m_Material: {fileID: 0}
   m_Interpolate: 1
@@ -328,6 +338,22 @@ HingeJoint2D:
   m_AngleLimits:
     m_LowerAngle: 0
     m_UpperAngle: 359
+--- !u!114 &19862567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 19862558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fad33eb85ee76f4aa966c4f0d6455a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StartingHP: 10
+  m_CurrentHP: 0
+  m_Dying: 0
+  m_Anim: {fileID: 0}
 --- !u!1 &118027643
 GameObject:
   m_ObjectHideFlags: 0
@@ -1558,6 +1584,36 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 400010, guid: 674c23718320e9d498cdad2a5bcd576a, type: 3}
   m_PrefabInstance: {fileID: 1033661626}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1055169040
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1055169041}
+  m_Layer: 0
+  m_Name: ShootingLocation
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1055169041
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1055169040}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.5, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 19862559}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1280219063
 GameObject:
   m_ObjectHideFlags: 0
