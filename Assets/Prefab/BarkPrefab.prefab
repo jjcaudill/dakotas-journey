@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 312876353074489229}
   - component: {fileID: 5976690246852992355}
   m_Layer: 0
-  m_Name: Bark
+  m_Name: BarkPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -97,8 +97,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d01f682858c74644972b30e26a633b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Damage: 0
-  m_TTL: 1000
+  m_Damage: 5
+  m_TTL: 100
+  m_Speed: 10
+  m_Direction: {x: 0, y: 0}
 --- !u!50 &312876353074489229
 Rigidbody2D:
   serializedVersion: 4
