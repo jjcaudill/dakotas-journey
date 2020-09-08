@@ -17,6 +17,7 @@ namespace UnityStandardAssets.Cameras
         [SerializeField] private float m_SpinTurnLimit = 90;// The threshold beyond which the camera stops following the target's rotation. (used in situations where a car spins out, for example)
         [SerializeField] private float m_TargetVelocityLowerLimit = 4f;// the minimum velocity above which the camera turns towards the object's velocity. Below this we use the object's forward direction.
         [SerializeField] private float m_SmoothTurnTime = 0.2f; // the smoothing for the camera's rotation
+        [SerializeField] private float m_HeightAdjustment = 0.0f; 
 
         private float m_LastFlatAngle; // The relative angle of the target and the rig from the previous frame.
         private float m_CurrentTurnAmount; // How much to turn the camera
@@ -85,7 +86,8 @@ namespace UnityStandardAssets.Cameras
             }
 
             // camera position moves towards target position:
-            transform.position = Vector3.Lerp(transform.position, m_Target.position, deltaTime*m_MoveSpeed);
+            Vector3 heightAdjustedPosition = new Vector3(m_Target.position.x, m_Target.position.y + m_HeightAdjustment, m_Target.position.z);
+            transform.position = Vector3.Lerp(transform.position, heightAdjustedPosition, deltaTime*m_MoveSpeed);
 
             // camera's rotation is split into two parts, which can have independend speed settings:
             // rotating towards the target's forward direction (which encompasses its 'yaw' and 'pitch')

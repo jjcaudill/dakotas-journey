@@ -14,14 +14,14 @@ public class DakotaCharacter : MonoBehaviour
     public float m_JumpForce = 300f;                  // Amount of force added when the player jumps.
     public bool m_CanDoubleJump = false;                  // Dakota's default Z rotation
     public float m_DoubleJumpForce = 200f;                  // Amount of force added when the player jumps.
-    public float m_Reach = 2.0f;                  // A mask determining what is ground to the character
+    public float m_HoldReach = 2.0f;                  // A mask determining what is ground to the character
     public Transform m_HoldPoint;                  // Where Dakota's mouth is
     public int m_IdleThreshold = 100;                  // Idle time until Dakota will sit
     public float m_DefaultRotation = 0.0f;                  // Dakota's default Z rotation
     public bool m_CanAttack = true;                  // Dakota's default Z rotation
     public bool m_CanShoot = true;                  // Dakota's default Z rotation
     public float m_AttackDmg = 10.0f;                  // Dakota's default Z rotation
-    public float m_AttackReach = 2.0f;                  // Dakota's default Z rotation
+    public float m_AttackReach = 4.0f;                  // Dakota's default Z rotation
     public GameObject m_ProjectileObject;                  // Dakota's default Z rotation
     public Transform m_ShootingPoint;                  // Dakota's default Z rotation
 
@@ -78,9 +78,9 @@ public class DakotaCharacter : MonoBehaviour
         m_Anim.SetBool("Attack", true);
         m_HasAttacked = true;
 
-        RaycastHit2D[] hits = Physics2D.RaycastAll(m_HoldPoint.position, Vector2.right * transform.localScale.x, m_Reach);
+        RaycastHit2D[] hits = Physics2D.RaycastAll(m_HoldPoint.position, Vector2.right * transform.localScale.x, m_AttackReach);
         foreach (RaycastHit2D hit in hits) {
-            if(hit.collider != null && hit.collider.tag != "Player") {
+            if(hit.collider != null && hit.collider.tag == "Enemy") {
                 hit.collider.gameObject.GetComponent<EnemyCharacter>().ApplyDamage(m_AttackDmg, transform.position);
             }
         }
@@ -179,7 +179,7 @@ public class DakotaCharacter : MonoBehaviour
 
         // Check if we are close to a grabable object
         Physics2D.queriesStartInColliders = false; // ignore yourself
-        RaycastHit2D hit = Physics2D.Raycast(m_HoldPoint.position, Vector2.right * transform.localScale.x, m_Reach); // is there an object within reach
+        RaycastHit2D hit = Physics2D.Raycast(m_HoldPoint.position, Vector2.right * transform.localScale.x, m_HoldReach); // is there an object within reach
         if(hit.collider != null && hit.collider.tag == "Grabbable") {
             m_Anim.SetBool("Grab", true);
             m_Grabbing = true;
@@ -258,6 +258,7 @@ public class DakotaCharacter : MonoBehaviour
         m_CanMove = false;
         m_Invulnerable = true;
         m_CanAttack = false;
+        // TODO: Freeze camera
         yield return new WaitForSeconds(0.4f);
         m_Rigidbody2D.velocity = new Vector2(0, m_Rigidbody2D.velocity.y);
         yield return new WaitForSeconds(1.1f);
@@ -267,6 +268,6 @@ public class DakotaCharacter : MonoBehaviour
     // void OnDrawGizmos()
     // {
     //     Gizmos.color = Color.green;
-    //     Gizmos.DrawLine(m_HoldPoint.position, m_HoldPoint.position + Vector3.right * transform.localScale.x * m_Reach);
+    //     Gizmos.DrawLine(m_HoldPoint.position, m_HoldPoint.position + Vector3.right * transform.localScale.x * m_HoldReach);
     // }
 }

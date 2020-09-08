@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Stalker : MonoBehaviour
+public class Runner : MonoBehaviour
 {
     public Transform m_Target;
     public float m_Speed;
@@ -14,12 +14,9 @@ public class Stalker : MonoBehaviour
 
     private float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
     private Rigidbody2D m_Rigidbody2D;
-    private float m_OriginalXScale;
-    private float m_Velocity;
 
     private void Start()
     {
-        m_OriginalXScale = transform.localScale.x;
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
     }
 
@@ -31,17 +28,7 @@ public class Stalker : MonoBehaviour
             return;
         }
 
-        Vector3 tempScale = transform.localScale;
-        tempScale.x = m_OriginalXScale;
-        m_Velocity = -1 * m_Speed;
-        if (transform.position.x < m_Target.position.x){
-            m_Velocity *= -1;
-            tempScale.x *= -1;
-        }
-
-        transform.localScale = tempScale;
-
-        m_Rigidbody2D.velocity = new Vector2((m_Velocity * (m_SpeedUpRate) + m_Rigidbody2D.velocity.x * (1.0f - m_SpeedUpRate)), m_Rigidbody2D.velocity.y);
+        m_Rigidbody2D.velocity = new Vector2((m_Speed * (m_SpeedUpRate) + m_Rigidbody2D.velocity.x * (1.0f - m_SpeedUpRate)), m_Rigidbody2D.velocity.y);
 
         // The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
         // This can be done using layers instead but Sample Assets will not overwrite your project settings.
