@@ -629,7 +629,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Delay: 1
-  m_TTL: 5
   m_RespawnTime: 2.5
 --- !u!50 &571923907
 Rigidbody2D:
@@ -776,7 +775,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Delay: 1
-  m_TTL: 5
   m_RespawnTime: 2.5
 --- !u!50 &632194791
 Rigidbody2D:
@@ -1138,8 +1136,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 794841986}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: -5, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children:
   - {fileID: 1215578764}
   - {fileID: 1819703566}
@@ -1621,7 +1619,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Delay: 1
-  m_TTL: 5
   m_RespawnTime: 2.5
 --- !u!50 &997238481
 Rigidbody2D:
