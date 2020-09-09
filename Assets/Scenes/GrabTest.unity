@@ -137,7 +137,6 @@ GameObject:
   - component: {fileID: 19862563}
   - component: {fileID: 19862562}
   - component: {fileID: 19862561}
-  - component: {fileID: 19862567}
   - component: {fileID: 19862560}
   - component: {fileID: 19862566}
   m_Layer: 0
@@ -205,7 +204,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d08f91df3bd212f429df17f53ce2f364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_StartingHP: 15
   m_MaxSpeed: 10
+  m_GroundCheck: {fileID: 1443460739}
   m_WhatIsGround:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -213,7 +214,7 @@ MonoBehaviour:
   m_JumpForce: 1000
   m_CanDoubleJump: 1
   m_DoubleJumpForce: 700
-  m_Reach: 2
+  m_HoldReach: 1.5
   m_HoldPoint: {fileID: 1568652739}
   m_IdleThreshold: 10
   m_DefaultRotation: 0
@@ -221,7 +222,6 @@ MonoBehaviour:
   m_CanShoot: 1
   m_AttackDmg: 10
   m_AttackReach: 2
-  m_ProjectileDmg: 2
   m_ProjectileObject: {fileID: 6051655406882807567, guid: e08f51bcdef7af746b892a56ddf1fa33, type: 3}
   m_ShootingPoint: {fileID: 1055169041}
 --- !u!50 &19862563
@@ -339,19 +339,6 @@ HingeJoint2D:
   m_AngleLimits:
     m_LowerAngle: 0
     m_UpperAngle: 359
---- !u!114 &19862567
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 19862558}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7fad33eb85ee76f4aa966c4f0d6455a0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_StartingHP: 10
 --- !u!1 &118027643
 GameObject:
   m_ObjectHideFlags: 0
@@ -1072,7 +1059,7 @@ GameObject:
   - component: {fileID: 466535800}
   m_Layer: 0
   m_Name: StoneBlock
-  m_TagString: Grabbable
+  m_TagString: CanGrab
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1239,37 +1226,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: ba4eef1c1bb56b444b143beb8d3e30d5, type: 3}
   m_PrefabInstance: {fileID: 503561695}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &520986949
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 520986950}
-  m_Layer: 0
-  m_Name: Door
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &520986950
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 520986949}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 26.952478, y: 8.802033, z: -835.2443}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1773928407}
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &759552175
 GameObject:
   m_ObjectHideFlags: 0
@@ -1915,7 +1871,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1568652739}
   m_Layer: 0
-  m_Name: MouthLocation
+  m_Name: GrabPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2042,7 +1998,7 @@ GameObject:
   - component: {fileID: 1773928409}
   m_Layer: 0
   m_Name: Crate
-  m_TagString: Grabbable
+  m_TagString: CanGrab
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2055,11 +2011,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1773928406}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.62, y: 2.44, z: 835.2443}
+  m_LocalPosition: {x: 31.57248, y: 11.242033, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 520986950}
-  m_RootOrder: 0
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &1773928409
 Rigidbody2D:
@@ -2410,7 +2366,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fad33eb85ee76f4aa966c4f0d6455a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_StartingHP: 50
 --- !u!50 &1796501223
 Rigidbody2D:
   serializedVersion: 4
@@ -2582,6 +2537,7 @@ MonoBehaviour:
   m_SpinTurnLimit: 90
   m_TargetVelocityLowerLimit: 4
   m_SmoothTurnTime: 0.2
+  m_HeightAdjustment: 0
 --- !u!114 &1944937840
 MonoBehaviour:
   m_ObjectHideFlags: 0

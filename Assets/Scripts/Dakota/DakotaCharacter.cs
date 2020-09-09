@@ -177,18 +177,20 @@ public class DakotaCharacter : MonoBehaviour
             return;          
         }
 
-        // Check if we are close to a grabable object
-        Physics2D.queriesStartInColliders = false; // ignore yourself
-        RaycastHit2D hit = Physics2D.Raycast(m_HoldPoint.position, Vector2.right * transform.localScale.x, m_HoldReach); // is there an object within reach
-        if(hit.collider != null && hit.collider.tag == "Grabbable") {
-            m_Anim.SetBool("Grab", true);
-            m_Grabbing = true;
-            // Move Dakota bite point to collision location
-            Vector3 hitPoint = hit.point;
-            transform.position = transform.position + (hitPoint - m_HoldPoint.position);
-            // Start up hinge joint to object
-            m_BiteJoint.enabled = true;
-            m_BiteJoint.connectedBody = hit.rigidbody;
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(m_HoldPoint.position, m_HoldReach);
+        foreach (Collider2D collider in colliders) {
+            if (collider.tag == "CanGrab") {
+                m_Anim.SetBool("Grab", true);
+                m_Grabbing = true;
+                // Move Dakota bite point to collision location
+                // Vector3 hitPoint = hit.point;
+                Vector3 grabLocation = collider.attachedRigidbody.position;
+                transform.position = transform.position + (grabLocation - m_HoldPoint.position);
+                // Start up hinge joint to object
+                m_BiteJoint.enabled = true;
+                m_BiteJoint.connectedBody = collider.attachedRigidbody;
+                break;
+            }
         }
     } 
 
