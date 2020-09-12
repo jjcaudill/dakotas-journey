@@ -97,8 +97,8 @@ public class DakotaCharacter : MonoBehaviour
                 continue;
 
             if (hit.collider.tag == "Enemy") {
-                hit.collider.gameObject.SendMessage("ApplyDamage", m_AttackDmg);
-                hit.collider.gameObject.SendMessage("ApplyForce", transform.position);
+                hit.collider.gameObject.SendMessage("ApplyDamage", m_AttackDmg, SendMessageOptions.DontRequireReceiver);
+                hit.collider.gameObject.SendMessage("ApplyForce", transform.position, SendMessageOptions.DontRequireReceiver);
                 ApplyForce(hit.transform.position);
             }
         }
@@ -159,7 +159,6 @@ public class DakotaCharacter : MonoBehaviour
 
             // Move the character
             m_Rigidbody2D.velocity = new Vector2(move*m_MaxSpeed, m_Rigidbody2D.velocity.y);
-            Debug.Log(m_Rigidbody2D.velocity);
 
             // If the input is moving the player right and the player is facing left...
             if (!m_Grabbing && move > 0 && !m_FacingRight)

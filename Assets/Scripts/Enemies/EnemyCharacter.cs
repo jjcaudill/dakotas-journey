@@ -23,12 +23,6 @@ public class EnemyCharacter : MonoBehaviour
         m_CurrentHP = m_StartingHP;
     }
 
-    // Update is called once per frame
-    private void Update()
-    {
-        
-    }
-
     public void ApplyDamage(float damage) 
     {
         m_CurrentHP -= damage;

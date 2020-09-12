@@ -11,19 +11,6 @@ public class DeadlyTouch : MonoBehaviour
 
 	private bool m_HasHit = false; // Whether or not enemy is on cooldown
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (m_HasHit || !collision.gameObject.CompareTag("Player")){
@@ -33,8 +20,8 @@ public class DeadlyTouch : MonoBehaviour
         }
 
 		m_HasHit = true;
-        collision.gameObject.SendMessage("ApplyDamage", m_Damage);
-        collision.gameObject.SendMessage("ApplyForce", transform.position);
+        collision.gameObject.SendMessage("ApplyDamage", m_Damage, SendMessageOptions.DontRequireReceiver);
+        collision.gameObject.SendMessage("ApplyForce", transform.position, SendMessageOptions.DontRequireReceiver);
 
 		if (m_DeleteAfterAnyCollision || m_DeleteAfterPlayerCollision)
 			Destroy(gameObject); 

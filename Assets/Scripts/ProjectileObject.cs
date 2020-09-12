@@ -39,8 +39,8 @@ public class ProjectileObject : MonoBehaviour
         if (collision.gameObject.CompareTag("Player")) // Ignore it hitting Dakota
             return;
 
-        collision.gameObject.SendMessage("ApplyDamage", m_Damage);
-        collision.gameObject.SendMessage("ApplyForce", transform.position);
+        collision.gameObject.SendMessage("ApplyDamage", m_Damage, SendMessageOptions.DontRequireReceiver);
+        collision.gameObject.SendMessage("ApplyForce", transform.position, SendMessageOptions.DontRequireReceiver);
 
         Destroy(gameObject); 
     }
