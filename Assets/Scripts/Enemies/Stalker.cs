@@ -41,8 +41,6 @@ public class Stalker : MonoBehaviour
 
         transform.localScale = tempScale;
 
-        m_Rigidbody2D.velocity = new Vector2((m_Velocity * (m_SpeedUpRate) + m_Rigidbody2D.velocity.x * (1.0f - m_SpeedUpRate)), m_Rigidbody2D.velocity.y);
-
         // The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
         // This can be done using layers instead but Sample Assets will not overwrite your project settings.
         bool grounded = false;

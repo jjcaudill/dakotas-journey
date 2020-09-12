@@ -33,7 +33,8 @@ public class DeadlyTouch : MonoBehaviour
         }
 
 		m_HasHit = true;
-        collision.gameObject.GetComponent<DakotaCharacter>().ApplyDamage(m_Damage, transform.position);
+        collision.gameObject.SendMessage("ApplyDamage", m_Damage);
+        collision.gameObject.SendMessage("ApplyForce", transform.position);
 
 		if (m_DeleteAfterAnyCollision || m_DeleteAfterPlayerCollision)
 			Destroy(gameObject); 

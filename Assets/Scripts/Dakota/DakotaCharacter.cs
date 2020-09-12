@@ -12,6 +12,8 @@ public class DakotaCharacter : MonoBehaviour
     public LayerMask m_WhatIsGround;                  // A mask determining what is ground to the character
     public bool m_AirControl = true;                 // Whether or not a player can steer while jumping;
     public float m_JumpForce = 300f;                  // Amount of force added when the player jumps.
+    public float m_FallMultiplier = 7.5f;                  // Amount of force added when the player jumps.
+    public float m_LowJumpMultiplier = 5.0f;                  // Amount of force added when the player jumps.
     public bool m_CanDoubleJump = false;                  // Dakota's default Z rotation
     public float m_DoubleJumpForce = 200f;                  // Amount of force added when the player jumps.
     public float m_HoldReach = 2.0f;                  // A mask determining what is ground to the character
@@ -22,6 +24,7 @@ public class DakotaCharacter : MonoBehaviour
     public bool m_CanShoot = true;                  // Dakota's default Z rotation
     public float m_AttackDmg = 10.0f;                  // Dakota's default Z rotation
     public float m_AttackReach = 4.0f;                  // Dakota's default Z rotation
+    public float m_AttackSelfKnockback = 10.0f;
     public GameObject m_ProjectileObject;                  // Dakota's default Z rotation
     public Transform m_ShootingPoint;                  // Dakota's default Z rotation
 
@@ -46,6 +49,16 @@ public class DakotaCharacter : MonoBehaviour
         m_Anim = GetComponent<Animator>();
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
         m_BiteJoint = GetComponent<HingeJoint2D>();
+    }
+
+    private void Update()
+    {
+        // Apply jump physics
+        if (m_Rigidbody2D.velocity.y < 0) { // falling
+            m_Rigidbody2D.velocity += Vector2.up * Physics2D.gravity.y * (m_FallMultiplier - 1) * Time.deltaTime;
+        } else if (m_Rigidbody2D.velocity.y > 0 && !Input.GetButton("Jump")) { // jumping, but not holding down anymore
+            m_Rigidbody2D.velocity += Vector2.up * Physics2D.gravity.y * (m_LowJumpMultiplier - 1) * Time.deltaTime;
+        }
     }
 
     private void FixedUpdate()
@@ -80,8 +93,13 @@ public class DakotaCharacter : MonoBehaviour
 
         RaycastHit2D[] hits = Physics2D.RaycastAll(m_HoldPoint.position, Vector2.right * transform.localScale.x, m_AttackReach);
         foreach (RaycastHit2D hit in hits) {
-            if(hit.collider != null && hit.collider.tag == "Enemy") {
-                hit.collider.gameObject.GetComponent<EnemyCharacter>().ApplyDamage(m_AttackDmg, transform.position);
+            if(hit.collider == null)
+                continue;
+
+            if (hit.collider.tag == "Enemy") {
+                hit.collider.gameObject.SendMessage("ApplyDamage", m_AttackDmg);
+                hit.collider.gameObject.SendMessage("ApplyForce", transform.position);
+                ApplyForce(hit.transform.position);
             }
         }
 
@@ -114,6 +132,7 @@ public class DakotaCharacter : MonoBehaviour
 
     public void Move(float move, bool jump)
     {
+        // TODO: If grabbing add in more movement force if going backwards
         if (!m_CanMove || m_HasAttacked)
         {
             return; // Can't move while attacking
@@ -140,6 +159,7 @@ public class DakotaCharacter : MonoBehaviour
 
             // Move the character
             m_Rigidbody2D.velocity = new Vector2(move*m_MaxSpeed, m_Rigidbody2D.velocity.y);
+            Debug.Log(m_Rigidbody2D.velocity);
 
             // If the input is moving the player right and the player is facing left...
             if (!m_Grabbing && move > 0 && !m_FacingRight)
@@ -217,16 +237,13 @@ public class DakotaCharacter : MonoBehaviour
         m_CurrentHP = Mathf.Max(m_CurrentHP, m_StartingHP);
     }
 
-    public void ApplyDamage(float damage, Vector3 position) 
+    public void ApplyDamage(float damage) 
     {
         if (!m_Invulnerable)
         {
             m_Anim.SetBool("Hit", true);
             m_CurrentHP -= damage;
-            Vector2 damageDir = Vector3.Normalize(transform.position - position) * 40f ;
-            m_Rigidbody2D.velocity = Vector2.zero;
-            m_Rigidbody2D.AddForce(damageDir * 10);
-
+            
             if (m_CurrentHP < 0)
             {
                 StartCoroutine(RipDakota());
@@ -236,6 +253,16 @@ public class DakotaCharacter : MonoBehaviour
                 StartCoroutine(Stun(0.25f));
                 StartCoroutine(MakeInvincible(1f));
             }
+        }
+    }
+
+    public void ApplyForce(Vector3 position) 
+    {
+        if (!m_Invulnerable)
+        {
+            Vector2 damageDir = Vector3.Normalize(transform.position - position) * 40f ;
+            m_Rigidbody2D.velocity = Vector2.zero;
+            m_Rigidbody2D.AddForce(damageDir * m_AttackSelfKnockback);
         }
     }
 

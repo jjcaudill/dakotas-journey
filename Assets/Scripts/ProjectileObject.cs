@@ -39,8 +39,8 @@ public class ProjectileObject : MonoBehaviour
         if (collision.gameObject.CompareTag("Player")) // Ignore it hitting Dakota
             return;
 
-        Debug.Log("OnCollisionEnter2D");
-        collision.gameObject.GetComponent<EnemyCharacter>().ApplyDamage(m_Damage, transform.position);
+        collision.gameObject.SendMessage("ApplyDamage", m_Damage);
+        collision.gameObject.SendMessage("ApplyForce", transform.position);
 
         Destroy(gameObject); 
     }

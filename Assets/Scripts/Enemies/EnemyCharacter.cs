@@ -29,14 +29,16 @@ public class EnemyCharacter : MonoBehaviour
         
     }
 
-    public void ApplyDamage(float damage, Vector3 position) 
+    public void ApplyDamage(float damage) 
     {
         m_CurrentHP -= damage;
 
         if (!m_Invulnerable && m_CurrentHP < 0)
             Destroy(gameObject);
+    }
 
-        // Apply force
+    public void ApplyForce(Vector3 position)
+    {
         if (m_KnockBack)
         {
             Vector2 damageDir = Vector3.Normalize(transform.position - position) * 40f ;
