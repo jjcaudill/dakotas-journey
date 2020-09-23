@@ -60,6 +60,5 @@ public class EnemyCharacter : MonoBehaviour
 
     // If they come in range
     //  Attack, do damage, stop moving while attacking, then if no longer colliding, reset speed
-    private void 
 
 }
